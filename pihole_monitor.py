@@ -31,6 +31,7 @@ class PiHole:
 INITIAL_SLEEP_TIME = 60
 # Time to sleep between checks
 REQUEST_INTERVAL = 60
+REQUEST_INTERVAL_DOUBLE_CHECK = 15
 # Timeout in seconds
 REQUEST_TIMEOUT = 3
 
@@ -75,8 +76,9 @@ def print_message(message: str):
     print("[" + datetime.today().strftime("%Y-%m-%d") + " - " + str(time.strftime("%H:%M:%S")) + "] "
           + message)
 
-
-time.sleep(INITIAL_SLEEP_TIME)
+sleep_time = INITIAL_SLEEP_TIME ' sleep time at start
+time.sleep(sleep_time)
+sleep_time = REQUEST_INTERVAL ' sleep time if not double_check
 while True:
     for device in PI_HOLES:
         answer = ""
@@ -126,4 +128,9 @@ while True:
         if device.double_check:
             device.double_check = False
             
-    time.sleep(REQUEST_INTERVAL)
+    if device.double_check:            
+        sleep_time = REQUEST_INTERVAL_DOUBLE_CHECK
+    else:
+        sleep_time = REQUEST_INTERVAL
+            
+    time.sleep(sleep_time)
